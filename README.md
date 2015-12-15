@@ -11,4 +11,4 @@ Topics:
 - Check several log files at once "tail-style"
 - look for a pattern in these log files and output a message to stdout
 - Package everything with maven
-- More details in local README.md
+- More details in local README.md (coming soon)
