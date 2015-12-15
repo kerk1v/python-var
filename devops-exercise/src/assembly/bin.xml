@@ -1,0 +1,30 @@
+<assembly>
+  <formats>
+    <!-- we only want tar.gz as in the exercise -->
+    <format>tar.gz</format>
+  </formats>
+  <!-- the exercise also calls for an archive with relative paths, so er set that below -->
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <fileSets>
+    <!-- here are the lists of files that will be included in the final assembly -->
+    <fileSet>
+      <directory>src/main/resources/scripts</directory>
+      <outputDirectory>project/bin/errchecker</outputDirectory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <!-- Of course, we would like our Script to be executable -->
+      <fileMode>0777</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>src/main/resources/docs</directory>
+      <outputDirectory>project/docs</outputDirectory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0666</fileMode>
+    </fileSet>
+  </fileSets>
+</assembly>

@@ -1,0 +1,49 @@
+#!/usr/bin/python
+import multitail2
+import sys
+try:
+	# We open the directory where our logfiles are with the multitail2 library. Log directory hardcoded for testing...
+	# loglines = multitail2.MultiTail("/var/log/tomcat7/*") # -- the one used for testing with a real Tomcat 7 and some broken .war
+	loglines = multitail2.MultiTail("/tmp/tomcat-logs/*")
+except IOError:
+	print "Sorry, this program does not work on a directory with subdirectories or directory does not exist"
+	sys.exit(128)
+# now we open our output file (for appending) soing some basic checking in case the diretory does not exist or we don't have write permissions
+# file buffer will be 0 so output gets flushed straight away
+filebuffer = 0
+try:
+	outfile = open("/tmp/errchecker-log.txt", "a", filebuffer)
+except: 
+	print "Problems opening output file, please check permissions, if dir exists, ..."
+	sys.exit(64)
+
+# now we can initialize our global variable, mainy the error-counter
+
+exceptionCount = 0
+
+# and some helpers
+
+startup = "Server startup"
+exception = "Exception"
+error = "ERROR"
+
+# All lines from all files will go into tuples loglines [...], so we do an endless loop on that...
+ 
+for line in loglines:
+	# now let's extract the data from the tuple. First value is a nested tuple so...
+	logfileAndPos = line [0]
+	logfile = logfileAndPos [0]
+	position = logfileAndPos [1]
+	# and the message is the second element...
+	logmessage = line [1]
+	# Actual logic - we know python does not have switch / case, so we have to do the ugly if way:
+	if ((error in logmessage) or (exception in logmessage)): 
+		# Just testing, will write to file later
+		outfile.write ("TOMCAT ERROR: %s, file: %s line: %s \n" % (logmessage, logfile, position))
+		# increase exception counter
+		exceptionCount = exceptionCount+1
+	if startup in logmessage:
+		# write to file later...
+		outfile.write ("TOMCAT IS STARTED: ** %s ** errors since last startup, file: %s line: %s \n" % (exceptionCount, logfile, position))
+		# reset our exception counter
+		exceptionCount = 0

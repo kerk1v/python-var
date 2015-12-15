@@ -1,0 +1,40 @@
+Riplife exercise notes
+
+1. Create VirtualBox VM (Debian8, 2 GB RAM, 8GB HD, no GUI) root / test1234
+2. Install prerequisites: 
+	2.1 build-essentials, linux-headers-amd64
+	2.2 JDK
+	2.3	Maven (3.0.2 is the version that is in Debian 8 official repos) 
+	2.4 Python 2.7
+	2.5 Sudo (Just in case)
+	2.6 Tomcat (for testing)
+	
+3. Choice of programming language:
+	3.1 Pro-shell: 
+		- No external libraries
+		- possibly simpler and faster to implement
+	3.2 Pro-Python
+		- Some external (but included) libraries
+		- Portable across operating systems (Well, for Windows there is always cygwin, but it can be tricky to set up corectly)
+		
+	So, the winner is Python (actually, the code is also much simpler, compact and cleaner than a shell script would have been...) 
+	
+4. Writing the code:
+   4.1 Install pip from the repo.
+   4.2 To implement pure python and make our script portable across Linus / Win, we avoid using os. or subprocess. calls
+      4.2.1 We have the very nice multitail2 package on pypi that enables un to tail all files in a directory
+	        LIMITATION: It will drop an error if the directory has not only files but also sub-directories, so this will be our first error check
+	  4.2.1 "loglines" will be an array, first element is the logfile and the line, nested, second one is the message
+      4.3.1 The script puts each of the elements of the tuple in a variables, to do further processing, and in an endless loop checks for the error messages (increasing a counter) and startup message and outputs those to the file - counter is reset on a startup message
+	4.3 Limitations or possible improvements
+	  4.3.1 Handle CTRL+C to exit the script gracefully
+	  4.3.2 Server startup message gets duplicated in both catalina.out and catalina[date].out files, so it also appears twice in the output file, first time with the real error count, second time with "0"
+   4.3 (not really) a free bonus **The code is quite well commented**, even though python is normally quite readeable. 
+
+5. Setting up Maven
+   5.1 pom.xml includes the maven-assembly plugin and defines the phases including a specific "never" phase to skip building the .jar file (file is commented for specifics)
+   5.2 /src/assembly/bin.xml exactly describes the assembly, in our case the tar.gz file (see comments in file)
+	
+
+
+	
